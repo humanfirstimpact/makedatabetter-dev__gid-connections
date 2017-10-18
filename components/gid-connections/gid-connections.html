@@ -11,15 +11,15 @@ A data component to add/test/list a connections
 This component covers three functionality. The details are listed below:
 
 ## Add Connection
-        The field 'action' needs to set to 'ADD' in order to add a connection.
+The field 'action' needs to be set to 'ADD' in order to add a connection.
 
     <gid-connections action='ADD' api-url='https://ql50yzu0fj.execute-api.us-east-1.amazonaws.com/dev'
-                            connection-name='CRM@newton' db-name='CRM' host='192.168.33.10' port='1521'
-                            db-type='Oracle' db-user='globalids' password='globalids123'
-                            application='CRM APP' lob='Enterprise'
-                            api-token='MTAxNjUwMzAxMTUwNDUwNTg3NDkwODA5MDFY'
-                            actionType='database' conn-response='{{response}}' conn-error="{{error}}>
-        </gid-connections>
+    connection-name='CRM@newton' db-name='CRM' host='192.168.33.10' port='1521'
+    db-type='Oracle' db-user='globalids' password='globalids123'
+    application='CRM APP' lob='Enterprise'
+    api-token='MTAxNjUwMzAxMTUwNDUwNTg3NDkwODA5MDFY'
+    action='database' conn-response='{{response}}' conn-error='{{error}}'>
+    </gid-connections>
 
 
 The fields 'action', 'connection-name', 'db-name', 'host', 'port', 'db-type', 'db-user', 'password', 'application' &
@@ -28,9 +28,7 @@ The fields 'action', 'connection-name', 'db-name', 'host', 'port', 'db-type', 'd
 The property 'conn-response' returns the response against the rest call.
 The property 'conn-error' returns the error response against the rest call.
 
-API endpoint:
-   POST /add-connection
-    
+
 Input:
  api-url
  connectionName
@@ -43,33 +41,42 @@ Input:
  application
  lob
  apiToken
- actionType
+ action
  connResponse
  connError
 
 Sample Input: (Query params)
 
- ## Test Connection
-        The field 'action' needs to set to 'TEST' in order to test a connection.
+Output:
+ {
+   "database": {
+     "connectionName": "string",
+     "commonName": "string",
+     "message": "string"
+   }
+ }
 
-      <gid-connections action='TEST' api-url='https://ql50yzu0fj.execute-api.us-east-1.amazonaws.com/dev'
-                            connection-name='CRM@newton' db-name='CRM' host='192.168.33.10' port='1521'
-                            db-type='Oracle' db-user='globalids' password='globalids123'
-                            application='CRM APP' lob='Enterprise'
-                            api-token='MTAxNjUwMzAxMTUwNDUwNTg3NDkwODA5MDFY'
-                            actionType='database' conn-response='{{response}}' conn-error="{{error}}>
-        </gid-connections>
-API endpoint:
-   POST /add-connection
+ ## Test Connection
+The field 'action' needs to be set to 'TEST' in order to test a connection.
+
+    <gid-connections action='TEST' api-url='https://virtserver.swaggerhub.com/srimanta.maji/DISCOVERY/1'
+    connection-name='CRM@newton' db-name='CRM' host='192.168.33.10' port='1521'
+    db-type='Oracle' db-user='globalids' password='globalids123'
+    application='CRM APP' lob='Enterprise'
+    api-token='{{apiToken}}'
+    action='database' conn-response='{{response}}' conn-error='{{error}}'>
+    </gid-connections>
+
 
 
 ## List Connections
-The field 'action' needs to set to 'LIST' in order to get the list of connections.
+The field 'action' needs to be set to 'LIST' in order to get the list of connections.
 
 A data component to get list of connections and its metadata for given user id
 
     <gid-list-connections action="LIST" api-url='https://virtserver.swaggerhub.com/srimanta.maji/DISCOVERY/1' api-token={{api-token}}
-    limit='[[limit]]' offset='[[offset]]' user='1' connections='{{connections}}'></gid-list-connections>
+    limit='[[limit]]' offset='[[offset]]' user='1' connections='{{connections}}'>
+    </gid-list-connections>
 
 The property 'user' is mandatory.
 
@@ -77,9 +84,6 @@ The property 'connections' returns the response against the rest call.
 
 - `limit`  & `offset` - use limit and offset parameters to paginate records
 
-
-API endpoint:
-    GET /databases
 
 Input:
 
@@ -93,25 +97,24 @@ Output:
 The output of this components will be as follows:
 
 {
-"databases": [
-        {
-            "id": "-3250952192666617532",
-            "label": "CONSUMER_RELATIONSHIP",
-            "dbName": "CONSUMER_RELATIONSHIP",
-            "host": "192.168.33.208",
-            "port": 1530,
-            "dbType": "Derby",
-            "application": {
-                "id": "102540266",
-                "label": "Customer Mangement System"
-            },
-            "lob": {
-                "id": "100850160",
-                "label": "GLOBAL"
-            }
-        }
-    ]
+	"databases": [{
+		"id": "-3250952192666617532",
+		"label": "CONSUMER_RELATIONSHIP",
+		"dbName": "CONSUMER_RELATIONSHIP",
+		"host": "192.168.33.208",
+		"port": 1530,
+		"dbType": "Derby",
+		"application": {
+			"id": "102540266",
+			"label": "Customer Mangement System"
+		},
+		"lob": {
+			"id": "100850160",
+			"label": "GLOBAL"
+		}
+	}]
 }
+
 
 @demo demo/index.html
 -->
@@ -139,7 +142,7 @@ The output of this components will be as follows:
                 is: 'gid-connections',
                 properties: {
                     /*Trigger to perform a specific action*/
-                    actionType: {
+                    action: {
                         type: String,
                         notify: true,
                         value: '',
@@ -191,7 +194,7 @@ The output of this components will be as follows:
                         notify: true
                     },
                     /*User id is stored here. This is a private property*/
-                    owner: {
+                    _owner: {
                         type: String,
                         notify: true,
                         value: ''
@@ -338,13 +341,13 @@ The output of this components will be as follows:
                 _reset: function () {
                     this._apiEntity = '';
                     this._path = '';
-                    this.actionType = "";
+                    this.action = "";
 
                 },
-                /* Observer of 'actionType' flag */
+                /* Observer of 'action' flag */
                 _actionObserver: function () {
-                    if (this.actionType) {
-                        this.owner = this.user;
+                    if (this.action) {
+                        this._owner = this.user;
                         if (this.apiUrl) {
                             this._pathKey = 'default';
                             this._apiEntity = 'add-connection';
@@ -393,8 +396,8 @@ The output of this components will be as follows:
                             this._addConnToken = this.apiToken;
                         }
 
-                        this.$.gidConnAPI.method = this._actionResultMap[this.actionType]["http"];
-                        this.$.gidConnAPI.apiContentType = this._actionResultMap[this.actionType]["contentType"];
+                        this.$.gidConnAPI.method = this._actionResultMap[this.action]["http"];
+                        this.$.gidConnAPI.apiContentType = this._actionResultMap[this.action]["contentType"];
 
                         this._addConnTimeout = this._addConnTimeout - 1;
 
