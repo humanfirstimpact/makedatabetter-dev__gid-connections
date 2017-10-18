@@ -11,14 +11,14 @@ A data component to add/test/list a connections
 This component covers three functionality. The details are listed below:
 
 ## Add Connection
-The field 'action' needs to be set to 'ADD' in order to add a connection.
+The field 'action' needs to set to 'ADD' in order to add a connection.
 
-    <gid-connections action='ADD' api-url='https://ql50yzu0fj.execute-api.us-east-1.amazonaws.com/dev'
-    connection-name='CRM@newton' db-name='CRM' host='192.168.33.10' port='1521'
-    db-type='Oracle' db-user='globalids' password='globalids123'
-    application='CRM APP' lob='Enterprise'
-    api-token='MTAxNjUwMzAxMTUwNDUwNTg3NDkwODA5MDFY'
-    action='database' conn-response='{{response}}' conn-error='{{error}}'>
+    <gid-connections action='ADD' api-url='https://virtserver.swaggerhub.com/srimanta.maji/DISCOVERY/1'
+    connection-name='{{connectionName}}' db-name='{{dbName}}' host='{{host}}' port='{{port}}'
+    db-type='{{dbType}}' db-user='{{dbUser}}' password='{{password}}'
+    application='{{application}}' lob='{{application}}'
+    api-token='{{apiToken}}'
+    conn-response='{{response}}' conn-error='{{error}}'>
     </gid-connections>
 
 
@@ -29,23 +29,19 @@ The property 'conn-response' returns the response against the rest call.
 The property 'conn-error' returns the error response against the rest call.
 
 
-Input:
- api-url
- connectionName
- dbName
- host
- port
- dbType
- dbUser
- password
- application
- lob
- apiToken
- action
- connResponse
- connError
-
-Sample Input: (Query params)
+**Input**
+ - `action` - Trigger to perform a specific action
+ - `api-url` - Base url
+ - `api-token` - Authorization token for accessing rest api
+ - `connection-name` - Common Name of database
+ - `db-name` -  Instance name
+ - `host` - IP of system where database is deployed
+ - `port` - Port on which database is running
+ - `db-type` - Database type
+ - `db-user` - User name for database access
+ - `password` - Password for database access
+ - `application` - Application
+ - `lob` - Line of business
 
 Output:
  {
@@ -57,16 +53,14 @@ Output:
  }
 
  ## Test Connection
-The field 'action' needs to be set to 'TEST' in order to test a connection.
+The field 'action' needs to set to 'TEST' in order to test a connection.
 
     <gid-connections action='TEST' api-url='https://virtserver.swaggerhub.com/srimanta.maji/DISCOVERY/1'
-    connection-name='CRM@newton' db-name='CRM' host='192.168.33.10' port='1521'
-    db-type='Oracle' db-user='globalids' password='globalids123'
-    application='CRM APP' lob='Enterprise'
+    db-name='{{dbName}}' host='{{host}}' port='{{port}}'
+    db-type='{{dbType}}' db-user='{{dbUser}}' password='{{password}}'
     api-token='{{apiToken}}'
-    action='database' conn-response='{{response}}' conn-error='{{error}}'>
+    conn-response='{{response}}' conn-error='{{error}}'>
     </gid-connections>
-
 
 
 ## List Connections
@@ -84,11 +78,6 @@ The property 'connections' returns the response against the rest call.
 
 - `limit`  & `offset` - use limit and offset parameters to paginate records
 
-
-Input:
-
-- User (Query param)
-
 Output:
 
 - List of connections with key metadata (items being displayed on listing page)
@@ -101,7 +90,7 @@ The output of this components will be as follows:
 		"id": "-3250952192666617532",
 		"label": "CONSUMER_RELATIONSHIP",
 		"dbName": "CONSUMER_RELATIONSHIP",
-		"host": "192.168.33.208",
+		"host": "host_ip",
 		"port": 1530,
 		"dbType": "Derby",
 		"application": {
@@ -213,7 +202,7 @@ The output of this components will be as follows:
                     /*Array listing the query-param*/
                     _queryParamsArr: {
                         type: Array,
-                        value: ["testConnection", "limit", "offset", "filter"]
+                        value: ["_testConnection", "limit", "offset", "filter"]
                     },
                     /*Parameter object*/
                     _paramsObj: {
@@ -320,7 +309,7 @@ The output of this components will be as follows:
                         value: ''
                     },
                     /*set it true to test a connection*/
-                    testConnection: {
+                    _testConnection: {
                         type: Boolean,
                         notify: true,
                         value: false
@@ -342,6 +331,7 @@ The output of this components will be as follows:
                     this._apiEntity = '';
                     this._path = '';
                     this.action = "";
+                    this._testConnection = false;
 
                 },
                 /* Observer of 'action' flag */
@@ -366,6 +356,9 @@ The output of this components will be as follows:
                             }
                         }
                         this._connUrl = this.apiUrl + res.join("");
+
+                        if ("TEST" == this.action)
+                            this._testConnection = true;
 
                         for (var i in this._bodyParamsArr) {
                             var isPublicPrivateNameDiffer = this._paramsMap[this._bodyParamsArr[i]];
