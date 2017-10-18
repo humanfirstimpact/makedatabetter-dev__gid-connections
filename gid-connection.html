@@ -14,7 +14,7 @@ This component covers three functionality. The details are listed below:
         The field 'action' needs to set to 'ADD' in order to add a connection.
 
     <gid-connections action='ADD' api-url='https://ql50yzu0fj.execute-api.us-east-1.amazonaws.com/dev'
-                            common-name='CRM@newton' connection-name='CRM' host='192.168.33.10' port='1521'
+                            connection-name='CRM@newton' db-name='CRM' host='192.168.33.10' port='1521'
                             db-type='Oracle' db-user='globalids' password='globalids123'
                             application='CRM APP' lob='Enterprise'
                             api-token='MTAxNjUwMzAxMTUwNDUwNTg3NDkwODA5MDFY'
@@ -22,22 +22,19 @@ This component covers three functionality. The details are listed below:
         </gid-connections>
 
 
-The fields 'action', 'common-name', 'connection-name', 'host', 'port', 'db-type', 'db-user', 'password', 'application' &
+The fields 'action', 'connection-name', 'db-name', 'host', 'port', 'db-type', 'db-user', 'password', 'application' &
 'lob' are mandatory.
 
 The property 'conn-response' returns the response against the rest call.
 The property 'conn-error' returns the error response against the rest call.
 
-If 'apiUrl' is not provided, then the component would fetch sample data from mock json.
-
 API endpoint:
-
    POST /add-connection
     
 Input:
  api-url
- commonName
  connectionName
+ dbName
  host
  port
  dbType
@@ -56,12 +53,14 @@ Sample Input: (Query params)
         The field 'action' needs to set to 'TEST' in order to test a connection.
 
       <gid-connections action='TEST' api-url='https://ql50yzu0fj.execute-api.us-east-1.amazonaws.com/dev'
-                            common-name='CRM@newton' connection-name='CRM' host='192.168.33.10' port='1521'
+                            connection-name='CRM@newton' db-name='CRM' host='192.168.33.10' port='1521'
                             db-type='Oracle' db-user='globalids' password='globalids123'
                             application='CRM APP' lob='Enterprise'
                             api-token='MTAxNjUwMzAxMTUwNDUwNTg3NDkwODA5MDFY'
                             actionType='database' conn-response='{{response}}' conn-error="{{error}}>
         </gid-connections>
+API endpoint:
+   POST /add-connection
 
 
 ## List Connections
@@ -80,7 +79,6 @@ The property 'connections' returns the response against the rest call.
 
 
 API endpoint:
-
     GET /databases
 
 Input:
@@ -99,7 +97,7 @@ The output of this components will be as follows:
         {
             "id": "-3250952192666617532",
             "label": "CONSUMER_RELATIONSHIP",
-            "connectionName": "CONSUMER_RELATIONSHIP",
+            "dbName": "CONSUMER_RELATIONSHIP",
             "host": "192.168.33.208",
             "port": 1530,
             "dbType": "Derby",
@@ -131,8 +129,8 @@ The output of this components will be as follows:
                  request-body={{_connRequestBody}}
                  api-token={{_addConnToken}}
                  api-timeout={{_addConnTimeout}}></gid-api>
-                 <!--method="POST" -->
-                 <!--api-content-type="application/x-www-form-urlencoded" -->
+        <!--method="POST" -->
+        <!--api-content-type="application/x-www-form-urlencoded" -->
     </template>
     <script>
         (function () {
@@ -202,12 +200,17 @@ The output of this components will be as follows:
                     /*Array listing the body-parameters*/
                     _bodyParamsArr: {
                         type: Array,
-                        value: ["commonName", "connectionName", "host", "port", "dbType", "dbUser", "password", "application", "lob"]
+                        value: ["connectionName", "dbName", "host", "port", "dbType", "dbUser", "password", "application", "lob"]
+                    },
+                    /*Object to map public-attribute name to private-api-attribute name */
+                    _paramsMap: {
+                        type: Object,
+                        value: {"connectionName": "commonName", "dbName": "connectionName"}
                     },
                     /*Array listing the query-param*/
                     _queryParamsArr: {
                         type: Array,
-                        value: ["testConnection","limit","offset","filter"]
+                        value: ["testConnection", "limit", "offset", "filter"]
                     },
                     /*Parameter object*/
                     _paramsObj: {
@@ -250,12 +253,12 @@ The output of this components will be as follows:
                         value: {},
                         notify: true
                     },
-                    commonName: {
+                    connectionName: {
                         type: String,
                         notify: true,
                         value: ""
                     },
-                    connectionName: {
+                    dbName: {
                         type: String,
                         notify: true,
                         value: ""
@@ -362,16 +365,26 @@ The output of this components will be as follows:
                         this._connUrl = this.apiUrl + res.join("");
 
                         for (var i in this._bodyParamsArr) {
-                            if (this[this._bodyParamsArr[i]]) {
-                                this._paramsObj[this._bodyParamsArr[i]] = this[this._bodyParamsArr[i]];
+                            var isPublicPrivateNameDiffer = this._paramsMap[this._bodyParamsArr[i]];
+                            if (isPublicPrivateNameDiffer) {
+                                if (this[this._paramsMap[this._bodyParamsArr[i]]])
+                                    this._paramsObj[this._paramsMap[this._bodyParamsArr[i]]] = this[this._paramsMap[this._bodyParamsArr[i]]];
+                            } else {
+                                if (this[this._bodyParamsArr[i]])
+                                    this._paramsObj[this._bodyParamsArr[i]] = this[this._bodyParamsArr[i]];
                             }
                         }
                         this._connRequestBody = JSON.stringify(this._paramsObj);
 
-                        this._paramsObj={};
+                        this._paramsObj = {};
                         for (var i in this._queryParamsArr) {
-                            if (this[this._queryParamsArr[i]]) {
-                                this._paramsObj[this._queryParamsArr[i]] = this[this._queryParamsArr[i]];
+                            var isPublicPrivateNameDiffer = this._paramsMap[this._queryParamsArr[i]];
+                            if (isPublicPrivateNameDiffer) {
+                                if (this[this._paramsMap[this._queryParamsArr[i]]])
+                                    this._paramsObj[this._paramsMap[this._queryParamsArr[i]]] = this[this._paramsMap[this._queryParamsArr[i]]];
+                            } else {
+                                if (this[this._queryParamsArr[i]])
+                                    this._paramsObj[this._queryParamsArr[i]] = this[this._queryParamsArr[i]];
                             }
                         }
                         this.$.gidConnAPI.apiParams = JSON.stringify(this._paramsObj);
