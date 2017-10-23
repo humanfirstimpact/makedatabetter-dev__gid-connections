@@ -402,9 +402,9 @@ The output of this components will be as follows:
                     if (newvalue != null) {
                         this.async(function () {
                             if (this.action && "LIST" == this.action)
-                                this.dbResponse = newvalue.databases;
+                                this.connResponse = newvalue.databases;
                             else
-                                this.dbResponse = newvalue.database;
+                                this.connResponse = newvalue.database;
                         }, 500);
                     }
                 },
