@@ -401,7 +401,10 @@ The output of this components will be as follows:
                     this._reset();
                     if (newvalue != null) {
                         this.async(function () {
-                            this.dbResponse = newvalue.database;
+                            if (this.action && "LIST" == this.action)
+                                this.dbResponse = newvalue.databases;
+                            else
+                                this.dbResponse = newvalue.database;
                         }, 500);
                     }
                 },
