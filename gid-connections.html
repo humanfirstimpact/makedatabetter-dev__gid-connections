@@ -197,7 +197,11 @@ The output of this components will be as follows:
                     /*Object to map public-attribute name to private-api-attribute name */
                     _paramsMap: {
                         type: Object,
-                        value: {"connectionName": "commonName", "dbName": "connectionName"}
+                        value: {
+                            "connectionName": "commonName",
+                            "dbName": "connectionName",
+                            "_testConnection": "testConnection"
+                        }
                     },
                     /*Array listing the query-param*/
                     _queryParamsArr: {
