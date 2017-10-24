@@ -364,8 +364,8 @@ The output of this components will be as follows:
                         for (var i in this._bodyParamsArr) {
                             var isPublicPrivateNameDiffer = this._paramsMap[this._bodyParamsArr[i]];
                             if (isPublicPrivateNameDiffer) {
-                                if (this[this._paramsMap[this._bodyParamsArr[i]]])
-                                    this._paramsObj[this._paramsMap[this._bodyParamsArr[i]]] = this[this._paramsMap[this._bodyParamsArr[i]]];
+                                if (this[this._bodyParamsArr[i]])
+                                    this._paramsObj[this._paramsMap[this._bodyParamsArr[i]]] = this[this._bodyParamsArr[i]];
                             } else {
                                 if (this[this._bodyParamsArr[i]])
                                     this._paramsObj[this._bodyParamsArr[i]] = this[this._bodyParamsArr[i]];
@@ -378,8 +378,8 @@ The output of this components will be as follows:
                         for (var i in this._queryParamsArr) {
                             var isPublicPrivateNameDiffer = this._paramsMap[this._queryParamsArr[i]];
                             if (isPublicPrivateNameDiffer) {
-                                if (this[this._paramsMap[this._queryParamsArr[i]]])
-                                    this._paramsObj[this._paramsMap[this._queryParamsArr[i]]] = this[this._paramsMap[this._queryParamsArr[i]]];
+                                if (this[this._queryParamsArr[i]])
+                                    this._paramsObj[this._paramsMap[this._queryParamsArr[i]]] = this[this._queryParamsArr[i]];
                             } else {
                                 if (this[this._queryParamsArr[i]])
                                     this._paramsObj[this._queryParamsArr[i]] = this[this._queryParamsArr[i]];
