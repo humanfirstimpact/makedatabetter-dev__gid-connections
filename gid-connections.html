@@ -199,14 +199,13 @@ The output of this components will be as follows:
                         type: Object,
                         value: {
                             "connectionName": "commonName",
-                            "dbName": "connectionName",
-                            "_testConnection": "testConnection"
+                            "dbName": "connectionName"
                         }
                     },
                     /*Array listing the query-param*/
                     _queryParamsArr: {
                         type: Array,
-                        value: ["_testConnection", "limit", "offset", "filter"]
+                        value: ["limit", "offset", "filter"]
                     },
                     /*Parameter object*/
                     _paramsObj: {
@@ -361,8 +360,6 @@ The output of this components will be as follows:
                         }
                         this._connUrl = this.apiUrl + res.join("");
 
-                        if ("TEST" == this.action)
-                            this._testConnection = true;
 
                         for (var i in this._bodyParamsArr) {
                             var isPublicPrivateNameDiffer = this._paramsMap[this._bodyParamsArr[i]];
@@ -386,6 +383,10 @@ The output of this components will be as follows:
                                 if (this[this._queryParamsArr[i]])
                                     this._paramsObj[this._queryParamsArr[i]] = this[this._queryParamsArr[i]];
                             }
+                        }
+                        if ("TEST" == this.action) {
+                            this._testConnection = true;
+                            this._paramsObj["testConnection"] = true;
                         }
                         this.$.gidConnAPI.apiParams = JSON.stringify(this._paramsObj);
 
