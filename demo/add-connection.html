@@ -118,10 +118,10 @@
             <paper-button raised class="indigo" id="listConceptBtn" on-click="_performAction">Submit</paper-button>
 
             <template is="dom-if" if="[[action.length]]">
-                <gid-connections action=[[action]] api-url="{{apiUrl}}" api-token={{apiToken}}
-                                 connection-name="{{connNm}}" db-name="{{dbNm}}" host="{{host}}" port="{{port}}"
-                                 db-type="{{dbType}}" db-user="{{dbUser}}" password="{{password}}"
-                                 application='"{{application}}"' lob="{{lob}}"
+                <gid-connections action=[[action]] api-url="[[apiUrl]]" api-token=[[apiToken]]
+                                 connection-name="[[connNm]]" db-name="[[dbNm]]" host="[[host]]" port="[[port]]"
+                                 db-type="[[dbType]]" db-user="[[dbUser]]" password="[[password]]"
+                                 application="[[application]]" lob="[[lob]]"
                                  conn-response='{{response}}' conn-error="{{error}}">
                 </gid-connections>
             </template>
@@ -376,8 +376,7 @@
                     this.isConnList = false;
                 },
                 _performAction: function () {
-                    this.action = '';
-                    this.action = this.selectedAction.toUpperCase();
+                    this.set("action", this.selectedAction.toUpperCase());
                 },
                 responseReceived: function () {
                     if (this.response) {

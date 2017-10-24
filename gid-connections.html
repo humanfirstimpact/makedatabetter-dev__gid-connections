@@ -342,10 +342,12 @@ The output of this components will be as follows:
                 _actionObserver: function () {
                     if (this.action) {
                         this._owner = this.user;
-                        if (this.apiUrl) {
-                            this._pathKey = 'default';
-                            this._apiEntity = 'connections.' + this.action;
-                        }
+                        this.async(function () {
+                            if (this.apiUrl) {
+                                this._pathKey = 'default';
+                                this._apiEntity = 'connections.' + this.action;
+                            }
+                        }, 500);
                     }
                 },
                 /* Observer for api path */
