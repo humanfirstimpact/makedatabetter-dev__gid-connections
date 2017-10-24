@@ -371,7 +371,7 @@ The output of this components will be as follows:
                                     this._paramsObj[this._bodyParamsArr[i]] = this[this._bodyParamsArr[i]];
                             }
                         }
-                        this._connRequestBody = JSON.stringify(this._paramsObj);
+                        this._connRequestBody["definition"] = JSON.stringify(this._paramsObj);
 
                         this._paramsObj = {};
                         for (var i in this._queryParamsArr) {
