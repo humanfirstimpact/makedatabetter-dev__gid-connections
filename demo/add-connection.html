@@ -109,8 +109,8 @@
                 <paper-input label="DB Type" value={{dbType}} id="dbTypeId"></paper-input>
                 <paper-input label="DB User" value={{dbUser}} id="dbUserId"></paper-input>
                 <paper-input label="Password" type="password" value={{password}} id="passwordId"></paper-input>
-                <paper-toggle-button checked="{{isTest}}">Test Connection</paper-toggle-button>
-                <template is="dom-if" if="[[!isTest]]">
+                <!--<paper-toggle-button checked="{{_isAdd}}">Test Connection</paper-toggle-button>-->
+                <template is="dom-if" if="[[_isAdd]]">
                     <paper-input label="Application" value={{application}} id="applicationId"></paper-input>
                     <paper-input label="LOB" value={{lob}} id="lobId"></paper-input>
                 </template>
@@ -229,7 +229,7 @@
                     _actionList: {
                         type: Array,
                         notify: true,
-                        value: ["ADD", "TEST", "LIST"]
+                        value: ["TEST", "ADD", "LIST"]
                     },
                     user: {
                         type: String,
@@ -270,10 +270,10 @@
                         notify: true,
                         value: 'ADD'
                     },
-                    isTest: {
+                    _isAdd: {
                         type: Boolean,
-                        value: true,
-                        notify: true
+                        notify: true,
+                        value: false
                     },
                     connNm: {
                         type: String,
@@ -325,6 +325,21 @@
                         notify: true,
                         value: true
                     },
+                    _sampleData: {
+                        type: Object,
+                        value: {
+                            "apiUrl": "https://virtserver.swaggerhub.com/srimanta.maji/DISCOVERY/1",
+                            "connNm": "CRM@newton",
+                            "dbNm": "CRM",
+                            "host": "192.168.33.10",
+                            "port": "1521",
+                            "dbType": "Oracle",
+                            "dbUser": "globalids",
+                            "password": "globalids123",
+                            "application": "CRM APP",
+                            "lob": "Enterprise"
+                        }
+                    },
 
                     _actionListResponseReceived: function (newvalue, oldvalue) {
                         this._actionList = [];
@@ -354,6 +369,7 @@
                     this._reset();
                     this.selectedAction = event.currentTarget.value.toLowerCase();
                     this._isNotList = "LIST" !== event.currentTarget.value;
+                    this._isAdd = "ADD" == event.currentTarget.value;
                     this.notifyPath("selectedAction");
 //                    this[this.selectedAction] = true;
                     this.isError = false;
@@ -384,24 +400,25 @@
                     if (!this.apiUrl) {
                         this.toastrMsg = "No url provided, hence fetching sample data";
                         this.$.toast.open();
+                        for (var key in this._sampleData) {
+                            this[key] = this._sampleData[key];
+                        }
                     }
                     this._reset();
                     this.set("takeUserInput", true);
-                    this.notifyPath("takeUserInput");
                     this.user = 1;
-//                    this.actionListUrl = "assets/json/actionList.json";
-//                    this.actionListTimeout = this.actionListTimeout - 1;
-//                    this._loadingActions = true;
                 },
                 _resetVal: function () {
                     $("#apiUrl").val("");
                     $("#apiToken").val("");
                     this._reset();
+                    this.set("takeUserInput", false);
                 },
                 _reset: function () {
                     this.action = '';
                     this._loadingActions = false;
                     this.user = '';
+
                 }
             });
         })();
