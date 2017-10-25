@@ -364,6 +364,7 @@ The output of this components will be as follows:
                         this._connUrl = this.apiUrl + res.join("");
 
 
+                        this._paramsObj = {};
                         for (var i in this._bodyParamsArr) {
                             var isPublicPrivateNameDiffer = this._paramsMap[this._bodyParamsArr[i]];
                             if (isPublicPrivateNameDiffer) {
@@ -388,13 +389,13 @@ The output of this components will be as follows:
                                     this._paramsObj[this._queryParamsArr[i]] = this[this._queryParamsArr[i]];
                             }
                         }
-                        switch (this.action){
-                            case "TEST":{
+                        switch (this.action) {
+                            case "TEST": {
                                 this._testConnection = true;
                                 this._paramsObj["action"] = "test";
                                 break;
                             }
-                            case "ADD":{
+                            case "ADD": {
                                 this._paramsObj["action"] = "add";
                                 break;
                             }
