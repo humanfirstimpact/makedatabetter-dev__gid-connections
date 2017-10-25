@@ -100,7 +100,7 @@
                     <option value="{{item}}">{{item}}</option>
                 </template>
             </select>
-            <template is="dom-if" if="[[_isNotList]]">
+            <template is="dom-if" if="[[!_isList]]">
                 <paper-input label="Connection Name" value={{connNm}} id="connNmId"></paper-input>
                 <paper-input label="DB Name" value={{dbNm}} id="dbNmId"></paper-input>
                 <paper-input label="Host" value={{host}} id="hostId"></paper-input>
@@ -114,6 +114,13 @@
                     <paper-input label="LOB" value={{lob}} id="lobId"></paper-input>
                 </template>
             </template>
+            <template is="dom-if" if="[[_isList]]">
+                <paper-input label="Filter: label contains ?" value={{filter}} id="filterId"></paper-input>
+                <paper-input label="#Page : { 0 , LastPage }" value={{offset}} id="offsetId"></paper-input>
+                <paper-input label="#Record" value={{limit}} id="limitId"></paper-input>
+                </br>
+            </template>
+
             </br>
             <paper-button raised class="indigo" id="listConceptBtn" on-click="_performAction">Submit</paper-button>
 
@@ -121,7 +128,8 @@
                 <gid-connections action=[[action]] api-url="[[apiUrl]]" api-token=[[apiToken]]
                                  connection-name="[[connNm]]" db-name="[[dbNm]]" host="[[host]]" port="[[port]]"
                                  db-type="[[dbType]]" db-user="[[dbUser]]" password="[[password]]"
-                                 application="[[application]]" lob="[[lob]]"
+                                 application="[[application]]" lob="[[lob]]" limit='[[limit]]' offset='[[offset]]'
+                                 filter="[[_getFilter(filter)]]"
                                  conn-response='{{response}}' conn-error="{{error}}">
                 </gid-connections>
             </template>
@@ -166,7 +174,7 @@
         </template>
         <template is="dom-if" if="[[isError]]">
             <div class="horizontal-section">
-                <p>{{error.userMsg}}</p>
+                <p>{{error.response.userMessage}}</p>
             </div>
         </template>
 
@@ -319,10 +327,20 @@
                         notify: true,
                         value: 'Enterprise'
                     },
-                    _isNotList: {
+                    limit: {
+                        type: Number,
+                        notify: true,
+                        value: 10
+                    },
+                    offset: {
+                        type: Number,
+                        notify: true,
+                        value: 1
+                    },
+                    _isList: {
                         type: Boolean,
                         notify: true,
-                        value: true
+                        value: false
                     },
                     _sampleData: {
                         type: Object,
@@ -336,7 +354,9 @@
                             "dbUser": "globalids",
                             "password": "globalids123",
                             "application": "CRM APP",
-                            "lob": "Enterprise"
+                            "lob": "Enterprise",
+                            "limit": 0,
+                            "offset": 10
                         }
                     },
 
@@ -367,7 +387,7 @@
                 _selectAction: function (event) {
                     this._reset();
                     this.selectedAction = event.currentTarget.value.toLowerCase();
-                    this._isNotList = "LIST" !== event.currentTarget.value;
+                    this._isList = "LIST" == event.currentTarget.value;
                     this._isAdd = "ADD" == event.currentTarget.value;
                     this.notifyPath("selectedAction");
 //                    this[this.selectedAction] = true;
@@ -376,6 +396,7 @@
                     this.isConnList = false;
                 },
                 _performAction: function () {
+                    this._hideOutput();
                     this.set("action", this.selectedAction.toUpperCase());
                 },
                 responseReceived: function () {
@@ -416,6 +437,14 @@
                     this.action = '';
                     this._loadingActions = false;
                     this.user = '';
+                },
+                _hideOutput: function () {
+                    this.isError = false;
+                    this.isConAdded = false;
+                    this.isConnList = false;
+                },
+                _getFilter: function (tempFilter) {
+                    return tempFilter && tempFilter.length ? ("label co " + "'" + tempFilter + "'") : "";
                 }
             });
         })();

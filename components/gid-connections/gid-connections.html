@@ -68,15 +68,16 @@ The field 'action' needs to be set to 'LIST' in order to get the list of connect
 
 A data component to get list of connections and its metadata for given user id
 
-    <gid-list-connections action="LIST" api-url='https://virtserver.swaggerhub.com/srimanta.maji/DISCOVERY/1' api-token={{api-token}}
-    limit='[[limit]]' offset='[[offset]]' user='1' connections='{{connections}}'>
-    </gid-list-connections>
+    <gid-connections action="LIST" api-url='https://virtserver.swaggerhub.com/srimanta.maji/DISCOVERY/1' api-token={{api-token}}
+    limit='[[limit]]' offset='[[offset]]' user='1' filter='[[filter]]' conn-response='{{response}}' conn-error='{{error}}'>
+    </gid-connections>
 
 The property 'user' is mandatory.
 
-The property 'connections' returns the response against the rest call.
+The property 'conn-response' returns the response against the rest call.
 
-- `limit`  & `offset` - use limit and offset parameters to paginate records
+- `limit`  & `offset` - use limit and offset parameters to paginate records. These are optional
+- `filter` - use filter parameter to filtered records. This is optional
 
 Output:
 
