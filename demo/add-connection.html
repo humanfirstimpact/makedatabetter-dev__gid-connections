@@ -156,6 +156,7 @@
                         <th>DB Type</th>
                         <th>Application</th>
                         <th>LOB</th>
+                        <th>Added By</th>
                     </tr>
                     <template is="dom-repeat" items="[[response]]">
                         <tr>
@@ -167,6 +168,7 @@
                             <td>{{item.dbType}}</td>
                             <td>{{item.application.label}}</td>
                             <td>{{item.lob.label}}</td>
+                            <td>{{item.addedBy.label}}</td>
                         </tr>
                     </template>
                 </table>

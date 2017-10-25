@@ -199,8 +199,7 @@ The output of this components will be as follows:
                     _paramsMap: {
                         type: Object,
                         value: {
-                            "connectionName": "commonName",
-                            "dbName": "connectionName",
+                            "dbName": "label",
                             "dbUser": "user"
                         }
                     },
@@ -389,9 +388,16 @@ The output of this components will be as follows:
                                     this._paramsObj[this._queryParamsArr[i]] = this[this._queryParamsArr[i]];
                             }
                         }
-                        if ("TEST" == this.action) {
-                            this._testConnection = true;
-                            this._paramsObj["testConnection"] = true;
+                        switch (this.action){
+                            case "TEST":{
+                                this._testConnection = true;
+                                this._paramsObj["action"] = "test";
+                                break;
+                            }
+                            case "ADD":{
+                                this._paramsObj["action"] = "add";
+                                break;
+                            }
                         }
                         this.$.gidConnAPI.apiParams = JSON.stringify(this._paramsObj);
 
