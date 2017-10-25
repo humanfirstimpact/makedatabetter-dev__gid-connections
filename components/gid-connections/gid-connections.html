@@ -363,6 +363,8 @@ The output of this components will be as follows:
                         }
                         this._connUrl = this.apiUrl + res.join("");
 
+
+                        this._paramsObj = {};
                         for (var i in this._bodyParamsArr) {
                             var isPublicPrivateNameDiffer = this._paramsMap[this._bodyParamsArr[i]];
                             if (isPublicPrivateNameDiffer) {

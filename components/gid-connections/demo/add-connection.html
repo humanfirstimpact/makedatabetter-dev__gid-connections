@@ -95,7 +95,7 @@
             <span>Loading actions</span>
         </template>
         <template is="dom-if" if="[[takeUserInput]]">
-            <select on-change="_selectAction" style="width: 200px;">
+            Select Action:  <select on-change="_selectAction" style="width: 200px;">
                 <template is="dom-repeat" items="[[_actionList]]">
                     <option value="{{item}}">{{item}}</option>
                 </template>
@@ -116,8 +116,8 @@
             </template>
             <template is="dom-if" if="[[_isList]]">
                 <paper-input label="Filter: label contains ?" value={{filter}} id="filterId"></paper-input>
-                <paper-input label="#Page : { 0 , LastPage }" value={{offset}} id="offsetId"></paper-input>
-                <paper-input label="#Record" value={{limit}} id="limitId"></paper-input>
+                <paper-input label="#Offset { EX: 0,1,2, ... LastPage }" value={{offset}} id="offsetId"></paper-input>
+                <paper-input label="#Limit" value={{limit}} id="limitId"></paper-input>
                 </br>
             </template>
 
