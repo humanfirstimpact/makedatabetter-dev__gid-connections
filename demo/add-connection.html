@@ -158,7 +158,7 @@
                         <th>LOB</th>
                         <th>Added By</th>
                     </tr>
-                    <template is="dom-repeat" items="[[response]]">
+                    <template is="dom-repeat" items="[[response.databases]]">
                         <tr>
                             <td>{{item.id}}</td>
                             <td>{{item.label}}</td>
@@ -404,8 +404,8 @@
                 responseReceived: function () {
                     if (this.response) {
                         var isError = this.response.errorCode ? true : false;
-                        this.isConAdded = !isError && !(this.response instanceof Array);
-                        this.isConnList = !isError && this.response instanceof Array;
+                        this.isConnList = !isError && this.response.hasOwnProperty("databases");
+                        this.isConAdded = !isError && !this.isConnList;
                         this.isError = false;
                     }
 

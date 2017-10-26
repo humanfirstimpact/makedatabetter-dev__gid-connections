@@ -74,14 +74,15 @@ A data component to get list of connections and its metadata for given user id
 
 The property 'user' is mandatory.
 
-The property 'conn-response' returns the response against the rest call.
+The property 'conn-response' returns the response against the rest call. Key 'databases' contains array of connections & key '_meta' contains paging information (if exists)
 
 - `limit`  & `offset` - use limit and offset parameters to paginate records. These are optional
 - `filter` - use filter parameter to filtered records. This is optional
 
 Output:
 
-- List of connections with key metadata (items being displayed on listing page)
+- List of connections with key 'databases' (items being displayed on listing page)
+{"databases": Array, "_meta": Object}
 
 
 The output of this components will be as follows:
@@ -102,7 +103,10 @@ The output of this components will be as follows:
 			"id": "100850160",
 			"label": "GLOBAL"
 		}
-	}]
+	}],
+	"_meta":{
+            "total": 5, "limit": 10, "offset": 0
+	}
 }
 
 
@@ -420,7 +424,7 @@ The output of this components will be as follows:
                     if (newvalue != null) {
                         this.async(function () {
                             if (tempAction && "LIST" == tempAction)
-                                this.connResponse = newvalue.databases;
+                                this.connResponse = newvalue;
                             else
                                 this.connResponse = newvalue.database;
                         }, 500);
